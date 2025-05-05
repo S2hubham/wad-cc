@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>User Registration</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f2f2f2;
+    }
+
+    .container {
+      background: white;
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .link-btn {
+      background-color: #007bff;
+      margin-top: 15px;
+    }
+
+    .link-btn:hover {
+      background-color: #0069d9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>User Registration</h2>
+    <form id="registrationForm">
+      <input type="text" id="name" placeholder="Enter Name" required>
+      <input type="email" id="email" placeholder="Enter Email" required>
+      <button type="submit">Register</button>
+    </form>
+    <button class="link-btn" onclick="window.location.href='list.html'">View Registered Users</button>
+  </div>
+
+  <script>
+    document.getElementById('registrationForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const user = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value
+      };
+
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+
+      // Simulate AJAX POST
+      setTimeout(() => {
+        users.push(user);
+        localStorage.setItem('users', JSON.stringify(users));
+        alert('User registered successfully!');
+        window.location.href = 'list.html';
+      }, 500);
+    });
+  </script>
+</body>
+</html>

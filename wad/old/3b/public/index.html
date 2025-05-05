@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment CRUD Tester</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Assignment CRUD API Tester</h1>
+    
+    <div class="container">
+        <div>
+            <div class="card">
+                <h2>Create Assignment</h2>
+                <form id="createForm">
+                    <input type="text" id="title" placeholder="Title" required>
+                    <textarea id="description" placeholder="Description" required></textarea>
+                    <input type="date" id="dueDate" required>
+                    <button type="submit">Create Assignment</button>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h2>Update Assignment</h2>
+                <form id="updateForm">
+                    <input type="text" id="updateId" placeholder="Assignment ID" required>
+                    <input type="text" id="updateTitle" placeholder="Title">
+                    <textarea id="updateDescription" placeholder="Description"></textarea>
+                    <input type="date" id="updateDueDate">
+                    <select id="updateStatus">
+                        <option value="">Select Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    <button type="submit">Update Assignment</button>
+                </form>
+            </div>
+        </div>
+        
+        <div>
+            <div class="card">
+                <h2>All Assignments</h2>
+                <button id="getAll">Refresh List</button>
+                <div id="assignmentsList"></div>
+            </div>
+            
+            <div class="card">
+                <h2>API Response</h2>
+                <div id="results">Results will appear here...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base URL for API
+        const API_URL = 'http://localhost:3000/api/assignments';
+        
+        // DOM elements
+        const createForm = document.getElementById('createForm');
+        const updateForm = document.getElementById('updateForm');
+        const getAllBtn = document.getElementById('getAll');
+        const resultDiv = document.getElementById('results');
+        const assignmentsList = document.getElementById('assignmentsList');
+        
+        // Display results in the results div
+        function showResult(data) {
+            resultDiv.textContent = typeof data === 'object' 
+                ? JSON.stringify(data, null, 2) 
+                : data;
+        }
+        
+        // Fetch all assignments and display them
+        async function fetchAssignments() {
+            try {
+                const response = await fetch(API_URL);
+                const assignments = await response.json();
+                
+                assignmentsList.innerHTML = '';
+                
+                if (assignments.length === 0) {
+                    assignmentsList.innerHTML = '<p>No assignments found.</p>';
+                    return;
+                }
+                
+                assignments.forEach(assignment => {
+                    const item = document.createElement('div');
+                    item.className = 'assignment-item';
+                    
+                    const dueDate = new Date(assignment.dueDate).toLocaleDateString();
+                    
+                    item.innerHTML = `
+                        <h3>${assignment.title}</h3>
+                        <p>${assignment.description}</p>
+                        <p><strong>Due Date:</strong> ${dueDate}</p>
+                        <p><strong>Status:</strong> ${assignment.status}</p>
+                        <p><strong>ID:</strong> ${assignment._id}</p>
+                        <button class="edit-btn" data-id="${assignment._id}">Edit</button>
+                        <button class="delete-btn" data-id="${assignment._id}">Delete</button>
+                    `;
+                    
+                    assignmentsList.appendChild(item);
+                });
+                
+                // Add event listeners to edit and delete buttons
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', deleteAssignment);
+                });
+                
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        document.getElementById('updateId').value = id;
+                    });
+                });
+                
+            } catch (error) {
+                showResult(`Error fetching assignments: ${error.message}`);
+            }
+        }
+        
+        // Create a new assignment
+        createForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const assignment = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                dueDate: document.getElementById('dueDate').value
+            };
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(assignment)
+                });
+                
+                const result = await response.json();
+                showResult(result);
+                
+                if (response.ok) {
+                    createForm.reset();
+                    fetchAssignments();
+                }
+            } catch (error) {
+                showResult(`Error creating assignment: ${error.message}`);
+            }
+        });
+        
+        // Update an assignment
+        updateForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('updateId').value;
+            
+            const updates = {};
+            
+            const title = document.getElementById('updateTitle').value;
+            const description = document.getElementById('updateDescription').value;
+            const dueDate = document.getElementById('updateDueDate').value;
+            const status = document.getElementById('updateStatus').value;
+            
+            if (title) updates.title = title;
+            if (description) updates.description = description;
+            if (dueDate) updates.dueDate = dueDate;
+            if (status) updates.status = status;
+            
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updates)
+                });
+                
+                const result = await response.json();
+                showResult(result);
+                
+                if (response.ok) {
+                    updateForm.reset();
+                    fetchAssignments();
+                }
+            } catch (error) {
+                showResult(`Error updating assignment: ${error.message}`);
+            }
+        });
+        
+        // Delete an assignment
+        async function deleteAssignment() {
+            const id = this.getAttribute('data-id');
+            
+            if (confirm('Are you sure you want to delete this assignment?')) {
+                try {
+                    const response = await fetch(`${API_URL}/${id}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    const result = await response.json();
+                    showResult(result);
+                    
+                    if (response.ok) {
+                        fetchAssignments();
+                    }
+                } catch (error) {
+                    showResult(`Error deleting assignment: ${error.message}`);
+                }
+            }
+        }
+        
+        // Fetch all assignments button
+        getAllBtn.addEventListener('click', fetchAssignments);
+        
+        // Initial fetch
+        fetchAssignments();
+    </script>
+</body>
+</html>

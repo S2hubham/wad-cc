@@ -1,0 +1,23 @@
+/* Custom styles to enhance the jQuery Mobile default theme */
+.ui-page {
+    background-color: #f8f8f8;
+}
+
+.ui-header {
+    background-color: #3388cc;
+}
+
+.ui-footer {
+    background-color: #3388cc;
+    color: white;
+    text-align: center;
+}
+
+h2 {
+    color: #3388cc;
+}
+
+/* Add some padding to the content */
+.ui-content {
+    padding: 15px;
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Mobile Website</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Home Page -->
+<div data-role="page" id="home">
+    <div data-role="header">
+        <h1>My Mobile Site</h1>
+    </div>
+
+    <div role="main" class="ui-content">
+        <h2>Welcome to my mobile website</h2>
+        <p>This is a simple mobile website created with jQuery Mobile.</p>
+        
+        <ul data-role="listview" data-inset="true">
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <h4>© 2025 My Mobile Site</h4>
+    </div>
+</div>
+
+<!-- About Page -->
+<div data-role="page" id="about">
+    <div data-role="header">
+        <a href="#home" data-icon="home">Home</a>
+        <h1>About</h1>
+    </div>
+
+    <div role="main" class="ui-content">
+        <h2>About Us</h2>
+        <p>We are a company dedicated to providing mobile solutions.</p>
+        <a href="#home" data-role="button" data-icon="back">Back to Home</a>
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <h4>© 2025 My Mobile Site</h4>
+    </div>
+</div>
+
+<!-- Services Page -->
+<div data-role="page" id="services">
+    <div data-role="header">
+        <a href="#home" data-icon="home">Home</a>
+        <h1>Services</h1>
+    </div>
+
+    <div role="main" class="ui-content">
+        <h2>Our Services</h2>
+        <ul data-role="listview" data-inset="true">
+            <li>Mobile App Development</li>
+            <li>Web Design</li>
+            <li>UI/UX Consulting</li>
+        </ul>
+        <a href="#home" data-role="button" data-icon="back">Back to Home</a>
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <h4>© 2025 My Mobile Site</h4>
+    </div>
+</div>
+
+<!-- Contact Page -->
+<div data-role="page" id="contact">
+    <div data-role="header">
+        <a href="#home" data-icon="home">Home</a>
+        <h1>Contact</h1>
+    </div>
+
+    <div role="main" class="ui-content">
+        <h2>Contact Us</h2>
+        <form>
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name">
+            
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email">
+            
+            <label for="message">Message:</label>
+            <textarea name="message" id="message"></textarea>
+            
+            <button type="submit" data-icon="check">Send Message</button>
+        </form>
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <h4>© 2025 My Mobile Site</h4>
+    </div>
+</div>
+
+</body>
+</html>
